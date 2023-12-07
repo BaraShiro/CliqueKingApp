@@ -2,6 +2,7 @@ export 'clique/clique.dart';
 export 'cliques/cliques.dart';
 export 'user/user.dart';
 export 'repositories/repositories.dart';
+export 'loading/loading.dart';
 
 /// A user id corresponding to a Firebase Authentication User UID.
 typedef UserId = String;
