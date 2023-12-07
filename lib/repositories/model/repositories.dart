@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:clique_king/clique_king.dart';
 import 'package:firedart/firedart.dart';
-import 'package:dotenv/dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart';
 
 /// A helper class for keeping references to [FirebaseAuth] and [Firestore].
@@ -17,9 +17,8 @@ class Repositories {
 
   /// Private constructor.
   Repositories._create() {
-    final env = DotEnv(includePlatformEnvironment: true)..load();
-    _apiKey = env['FIREBASE_API_KEY'] ?? "";
-    _projectId = env['FIREBASE_PROJECT_ID'] ?? "";
+    _apiKey = dotenv.env['FIREBASE_API_KEY'] ?? "";
+    _projectId = dotenv.env['FIREBASE_PROJECT_ID'] ?? "";
 
     if (_apiKey.isEmpty) {
       if (kDebugMode) {
@@ -51,7 +50,8 @@ class Repositories {
 
   /// Initialize [FirebaseAuth] and [Firestore].
   Future<void> _initialize() async {
-    _auth = FirebaseAuth.initialize(_apiKey, await HiveStore.create(path: Directory.current.path));
+    // Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    _auth = FirebaseAuth.initialize(_apiKey, await HiveStore.create());
     _store = Firestore.initialize(_projectId);
   }
 

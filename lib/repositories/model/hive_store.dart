@@ -1,5 +1,6 @@
 import 'package:firedart/firedart.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 /// This is an implementation of a TokenStore which is required by firedart to persist
 //  Authentication Tokens.
@@ -8,9 +9,9 @@ import 'package:hive/hive.dart';
 class HiveStore extends TokenStore {
   static const keyToken = "auth_token";
 
-  static Future<HiveStore> create({required String path}) async {
+  static Future<HiveStore> create() async {
     // Make sure you call both:
-     Hive.init(path);
+     await Hive.initFlutter();
      Hive.registerAdapter(TokenAdapter());
 
     var box = await Hive.openBox("auth_store",
