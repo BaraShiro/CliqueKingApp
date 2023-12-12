@@ -1,5 +1,4 @@
-import 'package:firedart/firedart.dart';
-import 'package:firedart/auth/user_gateway.dart' as auth;
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:meta/meta.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:clique_king/clique_king.dart';
@@ -8,13 +7,13 @@ import 'package:string_validator/string_validator.dart';
 /// A repository for handling, authentication, and storage of local [User]s.
 @immutable
 class AuthenticationRepository {
-  final FirebaseAuth authentication;
+  final auth.FirebaseAuth authentication;
 
   /// Whether a user is currently logged in.
-  bool get isUserLoggedIn => authentication.isSignedIn;
+  bool get isUserLoggedIn => authentication.currentUser != null;
 
   /// Public constructor.
-  AuthenticationRepository({required this.authentication});
+  const AuthenticationRepository({required this.authentication});
 
   /// Registers a new user.
   ///
@@ -44,22 +43,18 @@ class AuthenticationRepository {
     if(userName.isEmpty) return Either.left(InvalidUserName(errorObject: "Invalid user name, can not be empty or only whitespace."));
 
     final auth.User authUser;
+    final auth.UserCredential userCredential;
     try {
-      await authentication.signUp(email, password);
+      userCredential = await authentication.createUserWithEmailAndPassword(email: email, password: password);
+      authUser = userCredential.user!;
     } catch(e) {
       return Either.left(FailedToRegisterAccount(errorObject: e));
     }
 
     try {
-      await authentication.updateProfile(displayName: userName);
+      await authUser.updateDisplayName(userName);
     } catch(e) {
       return Either.left(FailedToUpdateAccount(errorObject: e));
-    }
-
-    try {
-      authUser = await authentication.getUser();
-    } catch(e) {
-      return Either.left(FailedToGetAccount(errorObject: e));
     }
 
     return Either.right(User.fromAuthUser(authUser));
@@ -78,7 +73,7 @@ class AuthenticationRepository {
     if(userName.isEmpty) return Either.left(InvalidUserName(errorObject: "Invalid user name, can not be empty or only whitespace."));
 
     try {
-    await authentication.updateProfile(displayName: userName);
+      await authentication.currentUser?.updateDisplayName(userName);
     } catch(e) {
     return Either.left(FailedToUpdateAccount(errorObject: e));
     }
@@ -86,7 +81,7 @@ class AuthenticationRepository {
     final auth.User authUser;
 
     try {
-      authUser = await authentication.getUser();
+      authUser = authentication.currentUser!;
     } catch(e) {
       return Either.left(FailedToGetAccount(errorObject: e));
     }
@@ -99,7 +94,7 @@ class AuthenticationRepository {
   Future<Either<RepositoryError, User>> getLoggedInUser() async {
     auth.User authUser;
     try {
-      authUser = await authentication.getUser();
+      authUser = authentication.currentUser!;
     } catch(e) {
       return Either.left(FailedToGetAccount(errorObject: e));
     }
@@ -114,9 +109,11 @@ class AuthenticationRepository {
   Future<Either<RepositoryError, User>> loginUser({required String email, required String password}) async {
     email = normalizeEmail(email);
 
-    auth.User authUser;
+    final auth.UserCredential userCredential;
+    final auth.User authUser;
     try {
-      authUser = await authentication.signIn(email, password);
+      userCredential = await authentication.signInWithEmailAndPassword(email: email, password: password);
+      authUser = userCredential.user!;
     } catch(e) {
       // TODO: differentiate between wrong credentials and database failure
       return Either.left(WrongLoginCredentials(errorObject: e));
@@ -135,7 +132,7 @@ class AuthenticationRepository {
       return Option.of(FailedToLogoutAccount(errorObject: e));
     }
 
-    return Option.none();
+    return const Option.none();
   }
 
   /// Logs out and _permanently_ deletes the currently logged in user account.
@@ -143,11 +140,11 @@ class AuthenticationRepository {
   /// Returns a [FailedToDeleteAccount] error if it fails, otherwise nothing.
   Future<Option<RepositoryError>> deleteUser() async {
     try {
-      await authentication.deleteAccount();
+      await authentication.currentUser?.delete();
     } catch(e) {
       return Option.of(FailedToDeleteAccount(errorObject: e));
     }
 
-    return Option.none();
+    return const Option.none();
   }
 }

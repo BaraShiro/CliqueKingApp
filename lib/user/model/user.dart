@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firedart/auth/user_gateway.dart' as auth;
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 /// A representation of a user with a unique [id], [name], and [email].
 @immutable
@@ -10,7 +10,7 @@ final class User extends Equatable {
   final String email;
 
   /// Public constructor.
-  User({
+  const User({
     required this.id,
     required this.name,
     required this.email,
@@ -19,7 +19,7 @@ final class User extends Equatable {
   /// Named constructor for handling potential null values passed from a
   /// Firebase Auth user.
   User.fromAuthUser(auth.User user):
-    id = user.id,
+    id = user.uid,
     name = user.displayName ?? "",
     email = user.email ?? "";
 

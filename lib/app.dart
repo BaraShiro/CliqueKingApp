@@ -1,12 +1,13 @@
 import 'package:clique_king/clique_king.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// The primary app class, the starting point for the app.
 class App extends StatelessWidget {
-  final Repositories repositories;
 
-  const App({super.key, required this.repositories});
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +17,21 @@ class App extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: Colors.yellow,
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const Text(""),
+      home: MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider (create: (context) {
+            return AuthenticationRepository(authentication: FirebaseAuth.instance);
+          }),
+          RepositoryProvider (create: (context) {
+            return CliqueRepository(store: FirebaseFirestore.instance);
+          }),
+          RepositoryProvider (create: (context) {
+            return UserRepository(store: FirebaseFirestore.instance);
+          }),
+        ],
+        child: CliquesPage(),
+      ),
     );
   }
 }
