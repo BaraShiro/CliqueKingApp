@@ -60,6 +60,10 @@ final class FailedToDeleteAccount extends RepositoryError {
   FailedToDeleteAccount({required super.errorObject});
 }
 
+final class FailedToStreamAuthenticationStatus extends RepositoryError {
+  FailedToStreamAuthenticationStatus({required super.errorObject});
+}
+
 final class FailedToCreateUser extends RepositoryError {
   FailedToCreateUser({required super.errorObject});
 }

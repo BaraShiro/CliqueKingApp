@@ -147,4 +147,12 @@ class AuthenticationRepository {
 
     return const Option.none();
   }
+
+  Either<RepositoryError, Stream<auth.User?>> authenticationStateChanges() {
+    try {
+      return Either.right(authentication.authStateChanges());
+    } catch (e) {
+      return Either.left(FailedToStreamAuthenticationStatus(errorObject: e));
+    }
+  }
 }
