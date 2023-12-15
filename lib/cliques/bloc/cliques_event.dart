@@ -1,6 +1,6 @@
 part of 'cliques_bloc.dart';
 
-/// base class for Cliques Events.
+/// Base class for Cliques Events.
 @immutable
 sealed class CliquesEvent {}
 

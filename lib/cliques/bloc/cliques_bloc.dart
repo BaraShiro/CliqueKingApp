@@ -4,12 +4,14 @@ import 'package:clique_king/clique_king.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:side_effect_bloc/side_effect_bloc.dart';
 
 part 'cliques_event.dart';
 part 'cliques_state.dart';
+part 'cliques_side_effect.dart';
 
 /// The Cliques Bloc class.
-final class CliquesBloc extends Bloc<CliquesEvent, CliquesState> {
+final class CliquesBloc extends SideEffectBloc<CliquesEvent, CliquesState, CliquesSideEffect> {
   final CliqueRepository _cliqueRepo;
   final AuthenticationRepository _authRepo;
 
@@ -34,12 +36,10 @@ final class CliquesBloc extends Bloc<CliquesEvent, CliquesState> {
 
   /// Handles Cliques Load Event.
   ///
-  /// Emits [CliquesLoadingInProgress], and then emits either:
-  /// * [CliquesLoadingFailure] if unable to read cliques.
-  /// * [CliquesLoadingSuccess] if cliques were read successfully.
+  /// Emits either:
+  /// * [CliquesLoadingFailure] if unable to read cliques stream.
+  /// * [CliquesLoadingSuccess] if cliques stream were read successfully.
   Future<void> _handleCliquesLoadEvent({required CliquesLoad event, required Emitter<CliquesState> emit}) async {
-    emit(CliquesLoadingInProgress());
-
     Either<RepositoryError, Stream<List<Clique>>> result = _cliqueRepo.readAllCliques();
 
     await result.match(
@@ -50,24 +50,24 @@ final class CliquesBloc extends Bloc<CliquesEvent, CliquesState> {
 
   /// Handles Add Clique Event.
   ///
-  /// Emits [AddCliqueInProgress], and then emits either:
-  /// * [AddCliqueFailure] if unable to read logged in user or write new clique.
-  /// * [AddCliqueSuccess] if new cliques were successfully written.
+  /// Produces either:
+  /// * [CliqueAddFailure] if unable to read logged in user or write new clique.
+  /// * [CliqueAddSuccess] if new clique were successfully written.
   Future<void> _handleAddCliqueEvent({required AddClique event, required Emitter<CliquesState> emit}) async {
-    emit(AddCliqueInProgress());
+    // emit(AddCliqueInProgress());
     // TODO: Check for name collision
     // TODO: Sanitize name
 
     Either<RepositoryError, User> userResult = await _authRepo.getLoggedInUser();
 
     await userResult.match(
-            (l) async => emit(AddCliqueFailure(error: l)),
+            (l) async => produceSideEffect(CliqueAddFailure(error: l)),
             (rUser) async {
               Either<RepositoryError, Clique> result = await _cliqueRepo.createClique(name: event.name, creatorId: rUser.id);
 
               result.match(
-                      (l) => emit(AddCliqueFailure(error: l)),
-                      (rClique) => emit(AddCliqueSuccess(clique: rClique))
+                      (l) => produceSideEffect(CliqueAddFailure(error: l)),
+                      (rClique) => produceSideEffect(CliqueAddSuccess(clique: rClique))
               );
             }
     );
@@ -76,19 +76,19 @@ final class CliquesBloc extends Bloc<CliquesEvent, CliquesState> {
 
   /// Handles Remove Clique Event
   ///
-  /// Emits [RemoveCliqueInProgress], and then emits either:
-  /// * [RemoveCliqueFailure] if unable to read clique or logged in user,
+  /// Produces either:
+  /// * [CliqueRemoveFailure] if unable to read clique or logged in user,
   /// unable to delete clique, or if user lacks permission to delete clique.
-  /// * [RemoveCliqueSuccess] if clique was deleted successfully.
+  /// * [CliqueRemoveSuccess] if clique was deleted successfully.
   Future<void> _handleRemoveCliqueEvent({required RemoveClique event, required Emitter<CliquesState> emit}) async {
-    emit(RemoveCliqueInProgress());
+    // emit(RemoveCliqueInProgress());
 
     Either<RepositoryError, User> userResult = await _authRepo.getLoggedInUser();
 
     bool userHasPermission = false;
     bool error = await userResult.match(
             (l) async {
-              emit(RemoveCliqueFailure(error: l));
+              produceSideEffect(CliqueRemoveFailure(error: l));
               return true;
             },
             (rUser) async {
@@ -96,7 +96,7 @@ final class CliquesBloc extends Bloc<CliquesEvent, CliquesState> {
 
               return cliqueResult.match(
                       (l) {
-                        emit(RemoveCliqueFailure(error: l));
+                        produceSideEffect(CliqueRemoveFailure(error: l));
                         return true;
                       },
                       (rClique) {
@@ -113,12 +113,12 @@ final class CliquesBloc extends Bloc<CliquesEvent, CliquesState> {
       Option<RepositoryError> result = await _cliqueRepo.deleteClique(cliqueId: event.cliqueId);
 
       result.match(
-              () => emit(RemoveCliqueSuccess()),
-              (t) => emit(RemoveCliqueFailure(error: t))
+              () => produceSideEffect(CliqueRemoveSuccess()),
+              (t) => produceSideEffect(CliqueRemoveFailure(error: t))
       );
     } else {
       RepositoryError error = UserPermissionViolation(errorObject: "Only the creator of a clique can delete it.");
-      emit(RemoveCliqueFailure(error: error));
+      produceSideEffect(CliqueRemoveFailure(error: error));
     }
 
   }
