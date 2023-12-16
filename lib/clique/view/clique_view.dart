@@ -54,65 +54,71 @@ class CliqueView extends StatelessWidget {
               );
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(clique.name),
-          actions: [
-            if(userInClique) ElevatedButton(
-                onPressed: () async {
-                  CliqueBloc bloc = BlocProvider.of<CliqueBloc>(context);
-                  bloc.add(CliqueLeave(cliqueId: clique.id));
-                },
-                child: const Text("Leave clique")
-            ),
-          ],
-        ),
-        floatingActionButton: switch (userInClique) {
-          true => FloatingActionButton.extended(
-            // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            // foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-            onPressed: () async {
-              CliqueBloc bloc = BlocProvider.of<CliqueBloc>(context);
-              bloc.add(CliqueIncreaseScore(cliqueId: clique.id, increase: 1));
-            },
-            label: const Text("Add score"),
-            icon: const Icon(Symbols.add),
-          ),
-
-          false => FloatingActionButton.extended(
-            // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            // foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-            onPressed: () async {
-              CliqueBloc bloc = BlocProvider.of<CliqueBloc>(context);
-              bloc.add(CliqueJoin(cliqueId: clique.id));
-            },
-            label: const Text("Join"),
-            icon: const Icon(Symbols.person_add),
-          ),
-        },
-        body: Center(
-          child: ListView(
-            padding: const EdgeInsets.only(left: 5, top: 5, right: 5, bottom: 5),
-            children: [
-              // header(context),
-              switch (scores.isEmpty) {
-                true => const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('No participants found!'),
-                        Text('Join the clique and start gaining score!')
-                      ],
-                    )),
-                false => ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.only(bottom: 200, top: 10),
-                    itemCount: scores.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return scoreCard(context, scores[index], index == 0);
-                    }),
-              },
+      child: Container(
+        width: MediaQuery.of(context).size.aspectIsLandscape ? landscapeScaffoldWidth : null,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(clique.name),
+            actions: [
+              if(userInClique) ElevatedButton(
+                  onPressed: () async {
+                    CliqueBloc bloc = BlocProvider.of<CliqueBloc>(context);
+                    bloc.add(CliqueLeave(cliqueId: clique.id));
+                  },
+                  child: const Text("Leave clique")
+              ),
             ],
+          ),
+          floatingActionButton: switch (userInClique) {
+            true => FloatingActionButton.extended(
+              // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              // foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+              onPressed: () async {
+                CliqueBloc bloc = BlocProvider.of<CliqueBloc>(context);
+                bloc.add(CliqueIncreaseScore(cliqueId: clique.id, increase: 1));
+              },
+              label: const Text("Add score"),
+              icon: const Icon(Symbols.add),
+            ),
+
+            false => FloatingActionButton.extended(
+              // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              // foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+              onPressed: () async {
+                CliqueBloc bloc = BlocProvider.of<CliqueBloc>(context);
+                bloc.add(CliqueJoin(cliqueId: clique.id));
+              },
+              label: const Text("Join"),
+              icon: const Icon(Symbols.person_add),
+            ),
+          },
+          body: Center(
+            child: Container(
+              width: MediaQuery.of(context).size.aspectIsLandscape ? landscapeContentWidth : null,
+              child: ListView(
+                padding: const EdgeInsets.only(left: 5, top: 5, right: 5, bottom: 5),
+                children: [
+                  // header(context),
+                  switch (scores.isEmpty) {
+                    true => const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('No participants found!'),
+                            Text('Join the clique and start gaining score!')
+                          ],
+                        )),
+                    false => ListView.builder(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.only(bottom: 200, top: 10),
+                        itemCount: scores.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return scoreCard(context, scores[index], index == 0);
+                        }),
+                  },
+                ],
+              ),
+            ),
           ),
         ),
       ),

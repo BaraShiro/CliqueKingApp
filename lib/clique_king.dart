@@ -19,3 +19,8 @@ const String cliqueCollection = "cliques";
 const String participantCollection = "participants";
 /// Passwords must be at least this long.
 const int minimumPasswordLength = 8;
+
+/// The width of the app scaffold in landscape view
+const double landscapeScaffoldWidth = 700;
+/// The width of the app content in landscape view
+const double landscapeContentWidth = 600;

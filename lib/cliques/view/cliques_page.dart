@@ -13,15 +13,6 @@ class CliquesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Cliques"),
-        actions: [
-          ElevatedButton(
-              onPressed: () => BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationLogoutRequested()),
-              child: const Text("Log out")
-          ),
-        ],
-      ),
       body: Center(
         child: BlocProvider(
           create: (_) => CliquesBloc(
