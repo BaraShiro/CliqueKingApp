@@ -25,8 +25,10 @@ class App extends StatelessWidget {
         }),
       ],
       child: BlocProvider(
-        create: (context) => AuthenticationBloc(authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context))
-          ..add(AuthenticationStartSubscribing()),
+        create: (context) => UserBloc(
+            authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context),
+            userRepository: RepositoryProvider.of<UserRepository>(context)
+        )..add(UserStarted()),
         child: AppView(),
       ),
     );
@@ -51,43 +53,45 @@ class AppView extends StatelessWidget {
       title: 'Clique King',
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: Colors.yellow,
+        colorSchemeSeed: Colors.amber,
       ),
-      home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-          builder: (context,  AuthenticationState state) {
+      home: BlocBuilder<UserBloc, UserState>(
+          builder: (context,  UserState state) {
             switch (state) {
-
-              case AuthenticationChanged():
-                return CliquesPage(user: User.fromAuthUser(state.user!),);
+              case UserAuthenticationChanged():
+                return const CliquesPage();
               case _:
-                return Text("User not logged in!");
+                return const LoginPage();
             }
           }
-      ), //const CliquesPage(user: BlocProvider.of<AuthenticationBloc>(context).state == AuthenticationChanged()),
-      // builder: (context, child) {
-      //   return BlocListener<AuthenticationBloc, AuthenticationState>(
-      //     listener: (context, state) {
-      //       switch (state) {
-      //         case AuthenticationInitial():
-      //           break;
-      //         case AuthenticationChanged():
-      //           switch (state.user != null) {
-      //             case true:
-      //               _navigator.pushReplacement(CliquesPage.route());
-      //               // );
-      //             case false:
-      //               _navigator.pushReplacement(LoginPage.route());
-      //           }
-      //         case AuthenticationError():
-      //           // TODO: add error page with reload button
-      //           print("Repository error: ${state.error}");
-      //           _navigator.pushReplacement(LoginPage.route());
-      //       }
-      //     },
-      //     child: child,
-      //   );
-      // },
-      onGenerateRoute: (_) => LoadingPage.route(),
+      ),
+
+      //const CliquesPage(user: BlocProvider.of<AuthenticationBloc>(context).state == AuthenticationChanged()),
+
+      builder: (context, child) {
+        return BlocListener<UserBloc, UserState>(
+          listener: (context, state) {
+            switch (state) {
+              case UserInitial():
+                break;
+              case UserAuthenticationChanged():
+                switch (state.user != null) {
+                  case true:
+                    _navigator.pushReplacement(CliquesPage.route());
+                    // );
+                  case false:
+                    _navigator.pushReplacement(LoginPage.route());
+                }
+              case UserAuthenticationError():
+                // TODO: add error page with reload button
+                print("Repository error: ${state.error}");
+                _navigator.pushReplacement(LoginPage.route());
+            }
+          },
+          child: child,
+        );
+      },
+      // onGenerateRoute: (_) => LoadingPage.route(),
     );
   }
 }

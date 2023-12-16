@@ -12,97 +12,117 @@ class CliquesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSideEffectListener<CliquesBloc, CliquesSideEffect>(
-      listener: (context, sideEffect) {
-        switch (sideEffect) {
-          case CliqueAddSuccess():
+    return BlocSideEffectListener<UserBloc, UserSideEffect>(
+      listener: (BuildContext context, UserSideEffect sideEffect) {
+        switch (sideEffect){
+          case UserLogoutSuccess():
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
-                SnackBar(content: Text('Successfully added clique ${sideEffect.clique.name}')),
+                const SnackBar(content: Text('User successfully logged out.')),
               );
-          case CliqueAddFailure():
+          case UserLogoutFailure():
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
-                SnackBar(content: Text('Failed to add clique. Error: ${sideEffect.error}')),
+                SnackBar(content: Text('Failed to log out user. Error: ${sideEffect.error}')),
               );
-          case CliqueRemoveSuccess():
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                const SnackBar(content: Text('Successfully removed clique')),
-              );
-          case CliqueRemoveFailure():
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(content: Text('Failed to remove clique. Error: ${sideEffect.error}')),
-              );
+          case _:
+            break;
         }
       },
-      child: Container(
-        width: MediaQuery.of(context).size.aspectIsLandscape ? landscapeScaffoldWidth : null,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text("Cliques"),
-            actions: [
-              ElevatedButton(
-                  onPressed: () => BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationLogoutRequested()),
-                  child: const Text("Log out")
-              ),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton.extended(
-            // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            // foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-            onPressed: () async {
-              CliquesBloc bloc = BlocProvider.of<CliquesBloc>(context);
-              String? newCliqueName = "Räksmörgås";
-              // Clique newClique = Clique(name: "Test Clique", creatorId: user.id);
-              // Clique? newClique = await showModalBottomSheet<Clique>(
-              //   enableDrag: false,
-              //   context: context,
-              //   builder: (BuildContext context) {
-              //     return Container(
-              //       padding: const EdgeInsets.all(5),
-              //       child: AddCliqueModal(user: user),
-              //     );
-              //   },
-              // );
-              // print(newClique);
-              if(newCliqueName != null) {
-                bloc.add(AddClique(name: newCliqueName));
-              }
-            },
-            label: const Text("Add new clique"),
-            icon: const Icon(Symbols.add),
-          ),
-          body: Center(
-            child: Container(
-              width: MediaQuery.of(context).size.aspectIsLandscape ? landscapeContentWidth : null,
-              child: ListView(
-                padding: const EdgeInsets.only(left: 5, top: 5, right: 5, bottom: 5),
-                children: [
-                  // header(context),
-                  switch (cliques.isEmpty) {
-                    true => const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('No cliques found!'),
-                            Text('Create a new clique and start gaining score!')
-                          ],
-                        )),
-                    false => ListView.builder(
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.only(bottom: 200, top: 10),
-                        itemCount: cliques.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return cliqueCard(context, cliques[index], cliques[index].creatorId == user.id);
-                        }),
-                  },
-                ],
+      child: BlocSideEffectListener<CliquesBloc, CliquesSideEffect>(
+        listener: (context, sideEffect) {
+          switch (sideEffect) {
+            case CliqueAddSuccess():
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(content: Text('Successfully added clique ${sideEffect.clique.name}')),
+                );
+            case CliqueAddFailure():
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(content: Text('Failed to add clique. Error: ${sideEffect.error}')),
+                );
+            case CliqueRemoveSuccess():
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  const SnackBar(content: Text('Successfully removed clique')),
+                );
+            case CliqueRemoveFailure():
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(content: Text('Failed to remove clique. Error: ${sideEffect.error}')),
+                );
+          }
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.aspectIsLandscape ? landscapeScaffoldWidth : null,
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text("Cliques"),
+              actions: [
+                ElevatedButton(
+                    onPressed: () => BlocProvider.of<UserBloc>(context).add(UserLogout()),
+                    child: const Text("Log out")
+                ),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton.extended(
+              // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              // foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+              onPressed: () async {
+                CliquesBloc bloc = BlocProvider.of<CliquesBloc>(context);
+                String? newCliqueName = "Räksmörgås";
+                // Clique newClique = Clique(name: "Test Clique", creatorId: user.id);
+                // Clique? newClique = await showModalBottomSheet<Clique>(
+                //   enableDrag: false,
+                //   context: context,
+                //   builder: (BuildContext context) {
+                //     return Container(
+                //       padding: const EdgeInsets.all(5),
+                //       child: AddCliqueModal(user: user),
+                //     );
+                //   },
+                // );
+                // print(newClique);
+                if(newCliqueName != null) {
+                  bloc.add(AddClique(name: newCliqueName));
+                }
+              },
+              label: const Text("Add new clique"),
+              icon: const Icon(Symbols.add),
+            ),
+            body: Center(
+              child: Container(
+                width: MediaQuery.of(context).size.aspectIsLandscape ? landscapeContentWidth : null,
+                child: ListView(
+                  padding: const EdgeInsets.only(left: 5, top: 5, right: 5, bottom: 5),
+                  children: [
+                    // header(context),
+                    switch (cliques.isEmpty) {
+                      true => const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('No cliques found!'),
+                              Text('Create a new clique and start gaining score!')
+                            ],
+                          )),
+                      false => ListView.builder(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.only(bottom: 200, top: 10),
+                          itemCount: cliques.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return cliqueCard(context, cliques[index], cliques[index].creatorId == user.id);
+                          }),
+                    },
+                  ],
+                ),
               ),
             ),
           ),
