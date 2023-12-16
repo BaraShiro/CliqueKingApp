@@ -16,9 +16,23 @@ class LoginPage extends StatelessWidget {
         title: const Text("Login"),
       ),
       body: Center(
-          child: ElevatedButton(
-              onPressed: () async  => await RepositoryProvider.of<AuthenticationRepository>(context).loginUser(email: "tester@lester.com", password: "test123"),
-              child: const Text("Login test user")
+          child: Column(
+            children: [
+              ElevatedButton(
+                  onPressed: () async  => await RepositoryProvider.of<AuthenticationRepository>(context).loginUser(email: "tester@lester.com", password: "test123"),
+                  child: const Text("Login Lester")
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                  onPressed: () async  => await RepositoryProvider.of<AuthenticationRepository>(context).loginUser(email: "Smyrno@lester.com", password: "smyrno123"),
+                  child: const Text("Login Smyrno")
+              ),
+              SizedBox(height: 10),
+              // ElevatedButton(
+              //     onPressed: () async  => await RepositoryProvider.of<AuthenticationRepository>(context).registerUser(email: "Smyrno@lester.com", password: "smyrno123", userName: 'Smyrno'),
+              //     child: const Text("Register user")
+              // ),
+            ],
           )
       ),
     );

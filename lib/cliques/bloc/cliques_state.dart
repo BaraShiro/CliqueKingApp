@@ -13,8 +13,9 @@ final class CliquesInitial extends CliquesState {}
 /// Loading of all cliques was successful.
 final class CliquesLoadingSuccess extends CliquesState {
   final List<Clique> cliques;
+  final User user;
 
-  CliquesLoadingSuccess({required this.cliques});
+  CliquesLoadingSuccess({required this.cliques, required this.user});
 
   @override
   List<Object?> get props => [cliques];

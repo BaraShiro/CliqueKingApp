@@ -47,7 +47,7 @@ class CliquesView extends StatelessWidget {
           // foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
           onPressed: () async {
             CliquesBloc bloc = BlocProvider.of<CliquesBloc>(context);
-            String? newCliqueName = "Test Clique 2";
+            String? newCliqueName = "Räksmörgås";
             // Clique newClique = Clique(name: "Test Clique", creatorId: user.id);
             // Clique? newClique = await showModalBottomSheet<Clique>(
             //   enableDrag: false,
@@ -68,62 +68,67 @@ class CliquesView extends StatelessWidget {
           icon: const Icon(Symbols.add),
         ),
         body: Center(
-          child: ListView(
-            padding: const EdgeInsets.only(left: 5, top: 5, right: 5, bottom: 5),
-            children: [
-              // header(context),
-              switch (cliques.isEmpty) {
-                true => const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('No cliques found!'),
-                        Text('Create a new clique and start gaining score!')
-                      ],
-                    )),
-                false => ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.only(bottom: 200, top: 10),
-                    itemCount: cliques.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return cliqueCard(context, cliques[index]);
-                    }),
-              },
-            ],
+          child: Container(
+            width: 600,
+            decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+            child: ListView(
+              padding: const EdgeInsets.only(left: 5, top: 5, right: 5, bottom: 5),
+              children: [
+                // header(context),
+                switch (cliques.isEmpty) {
+                  true => const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('No cliques found!'),
+                          Text('Create a new clique and start gaining score!')
+                        ],
+                      )),
+                  false => ListView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.only(bottom: 200, top: 10),
+                      itemCount: cliques.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return cliqueCard(context, cliques[index], cliques[index].creatorId == user.id);
+                      }),
+                },
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget cliqueCard(BuildContext context, Clique clique) {
+  Widget cliqueCard(BuildContext context, Clique clique, bool isCreator) {
     return Card(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        splashColor: Theme.of(context).colorScheme.primary.withAlpha(100),
-        onTap: () => Navigator.push(context, CliquePage.route(cliqueId: clique.id, user: user))
+        splashColor: Theme.of(context).colorScheme.primary,
+        onTap: () => Navigator.push(context, CliquePage.route(cliqueId: clique.id))
             .whenComplete(() => BlocProvider.of<CliquesBloc>(context)
             .add(CliquesLoad())),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(clique.name,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Text("Clique King: "),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(clique.name,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text("Clique King: "),
+                  ],
+                ),
               ),
 
-              const Spacer(),
-
-              TextButton.icon(
+              if(isCreator) TextButton.icon(
                 onPressed: () => BlocProvider.of<CliquesBloc>(context)
                     .add(RemoveClique(cliqueId: clique.id)),
                 label: Text("Delete",

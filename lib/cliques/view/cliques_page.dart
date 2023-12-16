@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CliquesPage extends StatelessWidget {
-  final User user;
 
-  const CliquesPage({super.key, required this.user});
+  const CliquesPage({super.key});
 
-  static Route<void> route({required User user}) {
-    return MaterialPageRoute<void>(builder: (context) => CliquesPage(user: user));
+  static Route<void> route() {
+    return MaterialPageRoute<void>(builder: (context) => CliquesPage());
   }
 
   @override
@@ -19,7 +18,7 @@ class CliquesPage extends StatelessWidget {
         actions: [
           ElevatedButton(
               onPressed: () => BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationLogoutRequested()),
-              child: const Text("Logout user")
+              child: const Text("Log out")
           ),
         ],
       ),
@@ -36,9 +35,9 @@ class CliquesPage extends StatelessWidget {
                 case CliquesInitial():
                   return const LoadingPage();
                 case CliquesLoadingFailure():
-                  return Text("Error: ${state.error}");
+                  return Text("Error: ${state.error}"); // TODO: Error page
                 case CliquesLoadingSuccess():
-                  return CliquesView(cliques: state.cliques, user: user);
+                  return CliquesView(cliques: state.cliques, user: state.user);
               }
             },
           ),

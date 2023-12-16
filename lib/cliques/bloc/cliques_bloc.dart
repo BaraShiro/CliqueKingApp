@@ -40,11 +40,18 @@ final class CliquesBloc extends SideEffectBloc<CliquesEvent, CliquesState, Cliqu
   /// * [CliquesLoadingFailure] if unable to read cliques stream.
   /// * [CliquesLoadingSuccess] if cliques stream were read successfully.
   Future<void> _handleCliquesLoadEvent({required CliquesLoad event, required Emitter<CliquesState> emit}) async {
-    Either<RepositoryError, Stream<List<Clique>>> result = _cliqueRepo.readAllCliques();
+    Either<RepositoryError, User> userResult = await _authRepo.getLoggedInUser();
 
-    await result.match(
+    await userResult.match(
             (l) async => emit(CliquesLoadingFailure(error: l)),
-            (r) async => emit.forEach(r, onData: (List<Clique> cliques) => CliquesLoadingSuccess(cliques: cliques))
+            (rUser) async {
+              Either<RepositoryError, Stream<List<Clique>>> result = _cliqueRepo.readAllCliques();
+
+              await result.match(
+                      (l) async => emit(CliquesLoadingFailure(error: l)),
+                      (r) async => emit.forEach(r, onData: (List<Clique> cliques) => CliquesLoadingSuccess(cliques: cliques, user: rUser))
+              );
+            }
     );
   }
 
