@@ -1,7 +1,6 @@
 import 'package:clique_king/clique_king.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 /// A page that shows the details of an [Exercise].
 class CliquePage extends StatelessWidget {
