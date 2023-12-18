@@ -12,22 +12,57 @@ sealed class UserState extends Equatable {
 /// Initial User State.
 final class UserInitial extends UserState {}
 
-/// The user authentication status has changed.
-final class UserAuthenticationChanged extends UserState {
-  final auth.User? user;
+/// User action in progress.
+final class UserInProgress extends UserState {}
 
-  const UserAuthenticationChanged({required this.user});
+/// Login user was successful.
+final class UserLoginSuccess extends UserState {
+  final User user;
 
-  @override
-  List<Object> get props => user != null ? [user!] : [];
+  const UserLoginSuccess({required this.user});
 }
 
-/// There was an error retrieving the user authentication status.
-final class UserAuthenticationError extends UserState {
-  final Object error;
+/// Login user has failed.
+final class UserLoginFailure extends UserState {
+  final RepositoryError error;
 
-  const UserAuthenticationError({required this.error});
+  const UserLoginFailure({required this.error});
+}
 
-  @override
-  List<Object> get props => [error];
+/// Register user was successful.
+final class UserRegisterSuccess extends UserState {
+  final User user;
+
+  const UserRegisterSuccess({required this.user});
+}
+
+/// Register user has failed.
+final class UserRegisterFailure extends UserState {
+  final RepositoryError error;
+
+  const UserRegisterFailure({required this.error});
+}
+
+/// Update user was successful.
+final class UserUpdateSuccess extends UserState {
+  final User user;
+
+  const UserUpdateSuccess({required this.user});
+}
+
+/// Update user has failed.
+final class UserUpdateFailure extends UserState {
+  final RepositoryError error;
+
+  const UserUpdateFailure({required this.error});
+}
+
+/// Delete user was successful.
+final class UserDeleteSuccess extends UserState {}
+
+/// Delete user has failed.
+final class UserDeleteFailure extends UserState {
+  final RepositoryError error;
+
+  const UserDeleteFailure({required this.error});
 }

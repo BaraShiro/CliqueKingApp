@@ -1,3 +1,4 @@
+import 'package:clique_king/authentication/authentication.dart';
 import 'package:clique_king/clique_king.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -24,11 +25,20 @@ class App extends StatelessWidget {
           return UserRepository(store: FirebaseFirestore.instance);
         }),
       ],
-      child: BlocProvider(
-        create: (context) => UserBloc(
-            authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context),
-            userRepository: RepositoryProvider.of<UserRepository>(context)
-        )..add(UserStarted()),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthenticationBloc(
+              authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context),
+            )..add(AuthenticationStartSubscribing()),
+          ),
+          BlocProvider(
+            create: (context) => UserBloc(
+              authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context),
+              userRepository: RepositoryProvider.of<UserRepository>(context),
+            ),
+          )
+        ],
         child: AppView(),
       ),
     );
@@ -55,11 +65,15 @@ class AppView extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: Colors.amber,
       ),
-      home: BlocBuilder<UserBloc, UserState>(
-          builder: (context,  UserState state) {
+      home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+          builder: (context, state) {
             switch (state) {
-              case UserAuthenticationChanged():
-                return const CliquesPage();
+              case AuthenticationChanged():
+                if(state.user != null) {
+                  return const CliquesPage();
+                } else {
+                  return const LoginPage();
+                }
               case _:
                 return const LoginPage();
             }
@@ -68,29 +82,29 @@ class AppView extends StatelessWidget {
 
       //const CliquesPage(user: BlocProvider.of<AuthenticationBloc>(context).state == AuthenticationChanged()),
 
-      builder: (context, child) {
-        return BlocListener<UserBloc, UserState>(
-          listener: (context, state) {
-            switch (state) {
-              case UserInitial():
-                break;
-              case UserAuthenticationChanged():
-                switch (state.user != null) {
-                  case true:
-                    _navigator.pushReplacement(CliquesPage.route());
-                    // );
-                  case false:
-                    _navigator.pushReplacement(LoginPage.route());
-                }
-              case UserAuthenticationError():
-                // TODO: add error page with reload button
-                print("Repository error: ${state.error}");
-                _navigator.pushReplacement(LoginPage.route());
-            }
-          },
-          child: child,
-        );
-      },
+      // builder: (context, child) {
+      //   return BlocListener<AuthenticationBloc, AuthenticationState>(
+      //     listener: (context, state) {
+      //       switch (state) {
+      //         case AuthenticationInitial():
+      //           break;
+      //         case AuthenticationChanged():
+      //           switch (state.user != null) {
+      //             case true:
+      //               _navigator.pushReplacement(CliquesPage.route());
+      //               // );
+      //             case false:
+      //               _navigator.pushReplacement(LoginPage.route());
+      //           }
+      //         case AuthenticationError():
+      //           // TODO: add error page with reload button
+      //           print("Repository error: ${state.error}");
+      //           _navigator.pushReplacement(LoginPage.route());
+      //       }
+      //     },
+      //     child: child,
+      //   );
+      // },
       // onGenerateRoute: (_) => LoadingPage.route(),
     );
   }

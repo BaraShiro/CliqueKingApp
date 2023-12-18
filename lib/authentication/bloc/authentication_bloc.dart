@@ -5,11 +5,14 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:meta/meta.dart';
+import 'package:side_effect_bloc/side_effect_bloc.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
+part 'authentication_side_effect.dart';
 
-class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
+class AuthenticationBloc extends SideEffectBloc<AuthenticationEvent, AuthenticationState, AuthenticationSideEffect> {
   final  AuthenticationRepository authenticationRepository;
 
   auth.User? get user {
@@ -47,7 +50,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
     on<AuthenticationLogoutRequested>((AuthenticationLogoutRequested event, Emitter<AuthenticationState> emit) async {
       print("Logout requested");
-      await authenticationRepository.logoutUser(); // TODO: Error handling
+      Option<RepositoryError> result = await authenticationRepository.logoutUser();
+      result.match(
+              () => produceSideEffect(AuthenticationLogoutSuccess()),
+              (t) => produceSideEffect(AuthenticationLogoutFailure(error: t))
+      );
     },
     );
   }

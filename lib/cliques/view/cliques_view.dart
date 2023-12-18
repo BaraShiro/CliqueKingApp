@@ -1,3 +1,4 @@
+import 'package:clique_king/authentication/authentication.dart';
 import 'package:clique_king/clique_king.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,16 +13,16 @@ class CliquesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSideEffectListener<UserBloc, UserSideEffect>(
-      listener: (BuildContext context, UserSideEffect sideEffect) {
+    return BlocSideEffectListener<AuthenticationBloc, AuthenticationSideEffect>(
+      listener: (BuildContext context, AuthenticationSideEffect sideEffect) {
         switch (sideEffect){
-          case UserLogoutSuccess():
+          case AuthenticationLogoutSuccess():
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 const SnackBar(content: Text('User successfully logged out.')),
               );
-          case UserLogoutFailure():
+          case AuthenticationLogoutFailure():
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
@@ -67,7 +68,7 @@ class CliquesView extends StatelessWidget {
               title: const Text("Cliques"),
               actions: [
                 ElevatedButton(
-                    onPressed: () => BlocProvider.of<UserBloc>(context).add(UserLogout()),
+                    onPressed: () => BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationLogoutRequested()),
                     child: const Text("Log out")
                 ),
               ],
