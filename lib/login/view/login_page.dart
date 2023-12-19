@@ -16,12 +16,12 @@ class LoginPage extends StatelessWidget {
         title: const Text("Login"),
         actions: [
           ElevatedButton(
-              onPressed: () async  => await BlocProvider.of<UserBloc>(context)..add(UserLogin(email: "tester@lester.com", password: "test123")),//RepositoryProvider.of<AuthenticationRepository>(context).loginUser(email: "tester@lester.com", password: "test123"),
+              onPressed: () => BlocProvider.of<UserBloc>(context)..add(UserLogin(email: "tester@lester.com", password: "test123")),
               child: const Text("Login Lester")
           ),
           const SizedBox(width: 10),
           ElevatedButton(
-              onPressed: () async  => await BlocProvider.of<UserBloc>(context)..add(UserLogin(email: "Smyrno@lester.com", password: "smyrno123")),//RepositoryProvider.of<AuthenticationRepository>(context).loginUser(email: "Smyrno@lester.com", password: "smyrno123"),
+              onPressed: () async  => await BlocProvider.of<UserBloc>(context)..add(UserLogin(email: "Smyrno@lester.com", password: "smyrno123")),
               child: const Text("Login Smyrno")
           ),
         ],
