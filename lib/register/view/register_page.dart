@@ -11,23 +11,9 @@ class RegisterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Register"),
-        actions: [
-          ElevatedButton(
-              onPressed: () => BlocProvider.of<UserBloc>(context)..add(UserRegister(email: "", password: "", name: "")),
-              child: const Text("Register test user")
-          ),
-        ],
-      ),
+    return const Scaffold(
       body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const RegisterView(),
-            ],
-          )
+          child: RegisterView()
       ),
     );
   }

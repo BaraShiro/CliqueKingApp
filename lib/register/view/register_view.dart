@@ -7,33 +7,49 @@ class RegisterView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserBloc, UserState>(
-      listener: (context, state) {
-        if(state is UserRegisterSuccess) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text('${state.user.name} registered.')),
-            );
-          Navigator.pop(context);
-        }
-        if(state is UserRegisterFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text('Failed to register user. Error: ${state.error}')),
-            );
-        }
-      },
-      child: BlocBuilder<UserBloc, UserState>(
-        builder: (context, state) {
-          switch (state) {
-            case UserInProgress():
-              return const LoadingPage();
-            case _:
-              return RegisterForm();
-          }
-        },
+    return SizedBox(
+      width: MediaQuery.of(context).size.aspectIsLandscape ? landscapeScaffoldWidth : null,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Register"),
+          actions: [
+            ElevatedButton(
+                onPressed: () => BlocProvider.of<UserBloc>(context)..add(UserRegister(email: "", password: "", name: "")),
+                child: const Text("Register test user")
+            ),
+          ],
+        ),
+        body: BlocListener<UserBloc, UserState>(
+          listener: (context, state) {
+            if(state is UserRegisterSuccess) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(content: Text('${state.user.name} registered.')),
+                );
+              Navigator.pop(context);
+            }
+            if(state is UserRegisterFailure) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(content: Text('Failed to register user. Error: ${state.error}')),
+                );
+            }
+          },
+          child: Center(
+            child: BlocBuilder<UserBloc, UserState>(
+              builder: (context, state) {
+                switch (state) {
+                  case UserInProgress():
+                    return const LoadingPage();
+                  case _:
+                    return RegisterForm();
+                }
+              },
+            ),
+          ),
+        ),
       ),
     );
   }

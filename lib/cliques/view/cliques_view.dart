@@ -61,7 +61,7 @@ class CliquesView extends StatelessWidget {
                 );
           }
         },
-        child: Container(
+        child: SizedBox(
           width: MediaQuery.of(context).size.aspectIsLandscape ? landscapeScaffoldWidth : null,
           child: Scaffold(
             appBar: AppBar(
@@ -99,7 +99,7 @@ class CliquesView extends StatelessWidget {
               icon: const Icon(Symbols.add),
             ),
             body: Center(
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.aspectIsLandscape ? landscapeContentWidth : null,
                 child: ListView(
                   padding: const EdgeInsets.only(left: 5, top: 5, right: 5, bottom: 5),

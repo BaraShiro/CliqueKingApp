@@ -11,37 +11,9 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Login"),
-        actions: [
-          ElevatedButton(
-              onPressed: () => Navigator.push(context, RegisterPage.route()),
-              child: const Text("Register")
-          ),
-          // ElevatedButton(
-          //     onPressed: () => BlocProvider.of<UserBloc>(context)..add(UserLogin(email: "tester@lester.com", password: "test123")),
-          //     child: const Text("Login Lester")
-          // ),
-          // const SizedBox(width: 10),
-          // ElevatedButton(
-          //     onPressed: () async  => await BlocProvider.of<UserBloc>(context)..add(UserLogin(email: "Smyrno@lester.com", password: "smyrno123")),
-          //     child: const Text("Login Smyrno")
-          // ),
-        ],
-      ),
+    return const Scaffold(
       body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // ElevatedButton(
-              //     onPressed: () async  => await RepositoryProvider.of<AuthenticationRepository>(context).registerUser(email: "Smyrno@lester.com", password: "smyrno123", userName: 'Smyrno'),
-              //     child: const Text("Register user")
-              // ),
-
-              const LoginView(),
-            ],
-          )
+          child: LoginView()
       ),
     );
   }
