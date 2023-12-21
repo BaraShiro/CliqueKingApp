@@ -12,12 +12,6 @@ class RegisterView extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Register"),
-          actions: [
-            ElevatedButton(
-                onPressed: () => BlocProvider.of<UserBloc>(context)..add(UserRegister(email: "", password: "", name: "")),
-                child: const Text("Register test user")
-            ),
-          ],
         ),
         body: BlocListener<UserBloc, UserState>(
           listener: (context, state) {

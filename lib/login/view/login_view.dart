@@ -17,10 +17,6 @@ class LoginView extends StatelessWidget {
                 onPressed: () => Navigator.push(context, RegisterPage.route()),
                 child: const Text("Register")
             ),
-            ElevatedButton(
-                onPressed: () => BlocProvider.of<UserBloc>(context)..add(UserLogin(email: "tester@lester.com", password: "test123")),
-                child: const Text("Login Lester")
-            ),
           ],
         ),
         body: BlocListener<UserBloc, UserState>(
