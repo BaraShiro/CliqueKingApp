@@ -56,8 +56,7 @@ class AuthenticationRepository {
     } catch(e) {
       return Either.left(FailedToUpdateAccount(errorObject: e));
     }
-
-    return Either.right(User.fromAuthUser(authUser));
+    return Either.right(User.fromAuthUser(authentication.currentUser!));
   }
 
   /// Updates the name of a user.
