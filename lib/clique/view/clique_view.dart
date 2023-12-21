@@ -135,8 +135,11 @@ class CliqueView extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            if(isKing) Text("👑",
-              style: Theme.of(context).textTheme.bodyLarge
+            SizedBox(
+              width: 32,
+              child: isKing
+                  ? Text("👑", style: Theme.of(context).textTheme.bodyLarge)
+                  : null,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
