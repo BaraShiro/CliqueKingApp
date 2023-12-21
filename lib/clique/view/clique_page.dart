@@ -53,7 +53,10 @@ class CliquePage extends StatelessWidget {
                 case CliqueInitial():
                   return const LoadingPage();
                 case CliqueLoadingFailure():
-                  return Text("Error: ${state.error}"); // TODO: Error page
+                  return ErrorView(
+                      error: state.error,
+                      reloadFunction: () => BlocProvider.of<CliqueBloc>(context)..add(CliqueLoad(cliqueId: cliqueId)),
+                  );
                 case CliqueLoadingSuccess():
                   return CliqueView(clique: state.clique, scores: state.allScoresSorted, userInClique: state.isInClique);
               }

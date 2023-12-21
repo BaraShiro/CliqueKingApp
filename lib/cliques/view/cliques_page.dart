@@ -40,7 +40,10 @@ class CliquesPage extends StatelessWidget {
                 case CliquesInitial():
                   return const LoadingPage();
                 case CliquesLoadingFailure():
-                  return Text("Error: ${state.error}"); // TODO: Error page
+                  return ErrorView(
+                    error: state.error,
+                    reloadFunction: () => BlocProvider.of<CliquesBloc>(context)..add(CliquesLoad()),
+                  );
                 case CliquesLoadingSuccess():
                   return CliquesView(cliques: state.cliques, user: state.user);
               }

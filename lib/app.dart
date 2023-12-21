@@ -51,8 +51,6 @@ class App extends StatelessWidget {
 class AppView extends StatelessWidget {
   final _navigatorKey = GlobalKey<NavigatorState>();
 
-  NavigatorState get _navigator => _navigatorKey.currentState!;
-
   AppView({super.key});
 
   @override
@@ -68,44 +66,24 @@ class AppView extends StatelessWidget {
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
             switch (state) {
+              case AuthenticationInitial():
+                return const LoadingPage();
               case AuthenticationChanged():
                 if(state.user != null) {
                   return const CliquesPage();
                 } else {
                   return const LoginPage();
                 }
-              case _:
-                return const LoginPage();
+              case AuthenticationError():
+                return ErrorView(
+                    error: state.error,
+                    reloadFunction: () => BlocProvider.of<AuthenticationBloc>(context)
+                      ..add(AuthenticationStartSubscribing()),
+                );
             }
           }
       ),
-
-      //const CliquesPage(user: BlocProvider.of<AuthenticationBloc>(context).state == AuthenticationChanged()),
-
-      // builder: (context, child) {
-      //   return BlocListener<AuthenticationBloc, AuthenticationState>(
-      //     listener: (context, state) {
-      //       switch (state) {
-      //         case AuthenticationInitial():
-      //           break;
-      //         case AuthenticationChanged():
-      //           switch (state.user != null) {
-      //             case true:
-      //               _navigator.pushReplacement(CliquesPage.route());
-      //               // );
-      //             case false:
-      //               _navigator.pushReplacement(LoginPage.route());
-      //           }
-      //         case AuthenticationError():
-      //           // TODO: add error page with reload button
-      //           print("Repository error: ${state.error}");
-      //           _navigator.pushReplacement(LoginPage.route());
-      //       }
-      //     },
-      //     child: child,
-      //   );
-      // },
-      // onGenerateRoute: (_) => LoadingPage.route(),
+      onGenerateRoute: (_) => LoadingPage.route(),
     );
   }
 }
