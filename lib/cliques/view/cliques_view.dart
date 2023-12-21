@@ -79,11 +79,17 @@ class CliquesView extends StatelessWidget {
               onPressed: () async {
                 CliquesBloc bloc = BlocProvider.of<CliquesBloc>(context);
                 String? newCliqueName = await showModalBottomSheet<String>(
+                  isScrollControlled: true,
                   enableDrag: false,
                   context: context,
                   builder: (BuildContext context) {
                     return Container(
-                      padding: const EdgeInsets.all(5),
+                      padding: EdgeInsets.only(
+                          left: 5,
+                          top: 5,
+                          right: 5,
+                          bottom: MediaQuery.of(context).viewInsets.bottom + 5
+                      ),
                       child: const AddCliqueModal(),
                     );
                   },
