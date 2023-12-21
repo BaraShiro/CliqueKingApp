@@ -74,7 +74,7 @@ class UserRepository { // TODO: add security
   /// * [FailedToQueryUsers] if the repository query fails.
   Future<Either<RepositoryError, bool>> userExists({required String userName}) async {
     userName = sanitizeUserName(userName);
-    if(userName.isEmpty) return Either.left(InvalidUserName(errorObject: "Invalid user name, can not be empty or only whitespace."));
+    if(userName.isEmpty) return Either.left(const InvalidUserName(errorObject: "Invalid user name, can not be empty or only whitespace."));
 
     final CollectionReference<User> usersRef = typeSafeUsersReference();
 

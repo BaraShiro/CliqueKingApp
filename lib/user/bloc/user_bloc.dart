@@ -21,16 +21,12 @@ final class UserBloc extends Bloc<UserEvent, UserState> {
     on<UserEvent>(
       (UserEvent event, Emitter<UserState> emit) async {
         switch (event) {
-          // case UserStarted():
-          //   break;
           case UserRegister():
             await _handleUserRegisterEvent(event: event, emit: emit);
           case UserUpdate():
             await _handleUserUpdateEvent(event: event, emit: emit);
           case UserLogin():
             await _handleUserLoginEvent(event: event, emit: emit);
-          // case UserLogout():
-          //   await _handleUserLogoutEvent(event: event, emit: emit);
           case UserDelete():
             await _handleUserDeleteEvent(event: event, emit: emit);
         }
@@ -56,7 +52,7 @@ final class UserBloc extends Bloc<UserEvent, UserState> {
             },
             (r) {
               if(r) {
-                RepositoryError userExistsError = UserNameAlreadyInUse(errorObject: "User name is already in use.");
+                RepositoryError userExistsError = const UserNameAlreadyInUse(errorObject: "User name is already in use.");
                 emit(UserRegisterFailure(error: userExistsError));
               }
               return r;
@@ -98,7 +94,7 @@ final class UserBloc extends Bloc<UserEvent, UserState> {
         },
             (r) {
           if(r) {
-            RepositoryError userExistsError = UserNameAlreadyInUse(errorObject: "User name is already in use.");
+            RepositoryError userExistsError = const UserNameAlreadyInUse(errorObject: "User name is already in use.");
             emit(UserUpdateFailure(error: userExistsError));
           }
           return r;

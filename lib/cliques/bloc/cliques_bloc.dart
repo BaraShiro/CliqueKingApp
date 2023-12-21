@@ -124,7 +124,7 @@ final class CliquesBloc extends SideEffectBloc<CliquesEvent, CliquesState, Cliqu
               (t) => produceSideEffect(CliqueRemoveFailure(error: t))
       );
     } else {
-      RepositoryError error = UserPermissionViolation(errorObject: "Only the creator of a clique can delete it.");
+      RepositoryError error = const UserPermissionViolation(errorObject: "Only the creator of a clique can delete it.");
       produceSideEffect(CliqueRemoveFailure(error: error));
     }
 

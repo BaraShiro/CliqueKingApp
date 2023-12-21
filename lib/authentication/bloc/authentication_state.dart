@@ -19,7 +19,7 @@ final class AuthenticationChanged extends AuthenticationState {
 }
 
 final class AuthenticationError extends AuthenticationState {
-  final Object error;
+  final RepositoryError error;
 
   const AuthenticationError({required this.error});
 

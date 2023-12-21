@@ -38,7 +38,6 @@ class AuthenticationBloc extends SideEffectBloc<AuthenticationEvent, Authenticat
               (r) async => await emit.onEach(
               r,
               onData: (auth.User? user) {
-                print("Got data, emitting from stream");
                 emit(AuthenticationChanged(user: user));
               }
           )
@@ -49,7 +48,6 @@ class AuthenticationBloc extends SideEffectBloc<AuthenticationEvent, Authenticat
     );
 
     on<AuthenticationLogoutRequested>((AuthenticationLogoutRequested event, Emitter<AuthenticationState> emit) async {
-      print("Logout requested");
       Option<RepositoryError> result = await authenticationRepository.logoutUser();
       result.match(
               () => produceSideEffect(AuthenticationLogoutSuccess()),

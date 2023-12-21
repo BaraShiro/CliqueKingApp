@@ -32,15 +32,15 @@ class AuthenticationRepository {
     if(isEmail(email)) {
       email = normalizeEmail(email);
     } else {
-      return Either.left(InvalidEmail(errorObject: "Invalid email address."));
+      return Either.left(const InvalidEmail(errorObject: "Invalid email address."));
     }
 
     if(!isLength(password, minimumPasswordLength)) {
-      return Either.left(InvalidPassword(errorObject: "Password must be at least $minimumPasswordLength characters long."));
+      return Either.left(const InvalidPassword(errorObject: "Password must be at least $minimumPasswordLength characters long."));
     }
 
     userName = sanitizeUserName(userName);
-    if(userName.isEmpty) return Either.left(InvalidUserName(errorObject: "Invalid user name, can not be empty or only whitespace."));
+    if(userName.isEmpty) return Either.left(const InvalidUserName(errorObject: "Invalid user name, can not be empty or only whitespace."));
 
     final auth.User authUser;
     final auth.UserCredential userCredential;
@@ -69,7 +69,7 @@ class AuthenticationRepository {
   /// * [FailedToGetAccount] if the auth server fails to retrieve the user.
   Future<Either<RepositoryError, User>> updateUser({required String userName}) async {
     userName = sanitizeUserName(userName);
-    if(userName.isEmpty) return Either.left(InvalidUserName(errorObject: "Invalid user name, can not be empty or only whitespace."));
+    if(userName.isEmpty) return Either.left(const InvalidUserName(errorObject: "Invalid user name, can not be empty or only whitespace."));
 
     try {
       await authentication.currentUser?.updateDisplayName(userName);

@@ -45,7 +45,7 @@ class CliquePage extends StatelessWidget {
           create: (_) => CliqueBloc(
             cliqueRepository: RepositoryProvider.of<CliqueRepository>(context),
             authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context),
-          )..add(CliqueLoad(cliqueId: cliqueId),),
+          )..add(CliqueLoad(cliqueId: cliqueId)),
           child: BlocBuilder<CliqueBloc, CliqueState>(
             buildWhen: (previous, current) => previous != current,
             builder: (context, CliqueState state) {

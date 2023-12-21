@@ -2,7 +2,6 @@ import 'package:universal_io/io.dart';
 import 'package:clique_king/clique_king.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// A page that shows a form to register a new [User].
 class RegisterPage extends StatelessWidget {

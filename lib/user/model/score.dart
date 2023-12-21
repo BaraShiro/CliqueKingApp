@@ -10,7 +10,7 @@ class Score extends Equatable {
   final int score;
 
   /// Public constructor.
-  Score({
+  const Score({
     required this.userId,
     required this.userName,
     required this.score,

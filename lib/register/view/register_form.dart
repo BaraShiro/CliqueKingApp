@@ -55,8 +55,6 @@ class _RegisterFormState extends State<RegisterForm> {
 
               DebounceField(
                 validator: (value) {
-                  String sanVal = sanitizeUserName(value);
-                  print("val: $value sanVal: $sanVal sanVal.isEmpty: ${sanVal.isNotEmpty}");
                   return Future.value(sanitizeUserName(value).isNotEmpty);
                 },
                 debounceDelay: debounceDuration,

@@ -71,8 +71,6 @@ class CliqueView extends StatelessWidget {
           ),
           floatingActionButton: switch (userInClique) {
             true => FloatingActionButton.extended(
-              // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              // foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
               onPressed: () async {
                 CliqueBloc bloc = BlocProvider.of<CliqueBloc>(context);
                 bloc.add(CliqueIncreaseScore(cliqueId: clique.id, increase: 1));
@@ -82,8 +80,6 @@ class CliqueView extends StatelessWidget {
             ),
 
             false => FloatingActionButton.extended(
-              // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              // foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
               onPressed: () async {
                 CliqueBloc bloc = BlocProvider.of<CliqueBloc>(context);
                 bloc.add(CliqueJoin(cliqueId: clique.id));
@@ -152,17 +148,6 @@ class CliqueView extends StatelessWidget {
             ),
 
             const Spacer(),
-
-            // TextButton.icon(
-            //   onPressed: () => BlocProvider.of<CliquesBloc>(context)
-            //       .add(RemoveClique(cliqueId: clique.id)),
-            //   label: Text("Delete",
-            //     style: TextStyle(color: Theme.of(context).colorScheme.error),
-            //   ),
-            //   icon: Icon(Symbols.delete_forever,
-            //     color: Theme.of(context).colorScheme.error,
-            //   ),
-            // ),
           ],
 
         ),

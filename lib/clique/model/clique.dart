@@ -13,7 +13,7 @@ class Clique extends Equatable {
   /// Public constructor.
   /// Automatically assigns [id] a random v4 UUID.
   Clique({required this.name, required this.creatorId})
-      : id = Uuid().v4();
+      : id = const Uuid().v4();
 
   /// Named constructor for reconstructing a [Clique] from a map.
   Clique.fromMap(Map<String, dynamic> map)

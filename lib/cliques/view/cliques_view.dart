@@ -28,8 +28,6 @@ class CliquesView extends StatelessWidget {
               ..showSnackBar(
                 SnackBar(content: Text('Failed to log out user. Error: ${sideEffect.error}')),
               );
-          case _:
-            break;
         }
       },
       child: BlocSideEffectListener<CliquesBloc, CliquesSideEffect>(
@@ -74,8 +72,6 @@ class CliquesView extends StatelessWidget {
               ],
             ),
             floatingActionButton: FloatingActionButton.extended(
-              // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              // foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
               onPressed: () async {
                 CliquesBloc bloc = BlocProvider.of<CliquesBloc>(context);
                 String? newCliqueName = await showModalBottomSheet<String>(

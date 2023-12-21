@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// A page that shows a listing of all [Clique]s.
 class CliquesPage extends StatelessWidget {
 
   const CliquesPage({super.key});
@@ -32,7 +33,7 @@ class CliquesPage extends StatelessWidget {
           create: (_) => CliquesBloc(
             cliqueRepository: RepositoryProvider.of<CliqueRepository>(context),
             authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context),
-          )..add(CliquesLoad(),),
+          )..add(CliquesLoad()),
           child: BlocBuilder<CliquesBloc, CliquesState>(
             buildWhen: (previous, current) => previous != current,
             builder: (context, CliquesState state) {
