@@ -78,19 +78,16 @@ class CliquesView extends StatelessWidget {
               // foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
               onPressed: () async {
                 CliquesBloc bloc = BlocProvider.of<CliquesBloc>(context);
-                String? newCliqueName = "Räksmörgås";
-                // Clique newClique = Clique(name: "Test Clique", creatorId: user.id);
-                // Clique? newClique = await showModalBottomSheet<Clique>(
-                //   enableDrag: false,
-                //   context: context,
-                //   builder: (BuildContext context) {
-                //     return Container(
-                //       padding: const EdgeInsets.all(5),
-                //       child: AddCliqueModal(user: user),
-                //     );
-                //   },
-                // );
-                // print(newClique);
+                String? newCliqueName = await showModalBottomSheet<String>(
+                  enableDrag: false,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      padding: const EdgeInsets.all(5),
+                      child: const AddCliqueModal(),
+                    );
+                  },
+                );
                 if(newCliqueName != null) {
                   bloc.add(AddClique(name: newCliqueName));
                 }
