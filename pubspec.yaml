@@ -27,6 +27,7 @@ dependencies:
   material_symbols_icons: ^4.2709.0
   side_effect_bloc: ^1.0.0
   collection: ^1.18.0
+  universal_io: ^2.2.2
 
 dev_dependencies:
   flutter_test:
