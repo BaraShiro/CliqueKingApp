@@ -36,7 +36,7 @@ class AuthenticationRepository {
     }
 
     if(!isLength(password, minimumPasswordLength)) {
-      return Either.left(InvalidPassword(errorObject: "Password must be at least 8 characters long."));
+      return Either.left(InvalidPassword(errorObject: "Password must be at least $minimumPasswordLength characters long."));
     }
 
     userName = sanitizeUserName(userName);
