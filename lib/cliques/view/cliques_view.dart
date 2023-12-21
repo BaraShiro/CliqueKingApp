@@ -146,19 +146,22 @@ class CliquesView extends StatelessWidget {
         onTap: () => Navigator.push(context, CliquePage.route(cliqueId: clique.id))
             .whenComplete(() => BlocProvider.of<CliquesBloc>(context)
             .add(CliquesLoad())),
-        child: Padding(
+        child: Container(
+          height: 50,
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
+              const Icon(Symbols.group),
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(clique.name,
                       style: Theme.of(context).textTheme.bodyLarge,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Text("Clique King: "),
                   ],
                 ),
               ),
