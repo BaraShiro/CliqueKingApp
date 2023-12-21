@@ -4,6 +4,7 @@ export 'user/user.dart';
 export 'repositories/repositories.dart';
 export 'loading/loading.dart';
 export 'login/login.dart';
+export 'register/register.dart';
 export 'extensions/extensions.dart';
 
 /// A user id corresponding to a Firebase Authentication User UID.

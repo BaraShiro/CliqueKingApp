@@ -5,19 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:string_validator/string_validator.dart';
 
-class LoginForm extends StatefulWidget {
+class RegisterForm extends StatefulWidget {
   final emailController = TextEditingController();
+  final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final passwordConfirmController = TextEditingController();
 
-  LoginForm({super.key});
+  RegisterForm({super.key});
 
   @override
-  State<StatefulWidget> createState() => _LoginFormState();
+  State<StatefulWidget> createState() => _RegisterFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
   final Duration debounceDuration = const Duration(seconds: 2);
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,7 @@ class _LoginFormState extends State<LoginForm> {
         key: _formKey,
         child: Column(
           children: [
-            const Text("Please enter your credentials below"),
+            const Text("Please fill in the form below to register"),
 
             const SizedBox(height: 10),
 
@@ -42,6 +45,25 @@ class _LoginFormState extends State<LoginForm> {
                 border: OutlineInputBorder(),
                 isDense: true,
                 labelText: 'Email',
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            DebounceField(
+              validator: (value) {
+                String sanVal = sanitizeUserName(value);
+                print("val: $value sanVal: $sanVal sanVal.isEmpty: ${sanVal.isNotEmpty}");
+                return Future.value(sanitizeUserName(value).isNotEmpty);
+              },
+              debounceDelay: debounceDuration,
+              controller: widget.usernameController,
+              isEmptyMessage: "Please enter a username.",
+              isInvalidMessage: "Username can not be empty or only whitespace.",
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                isDense: true,
+                labelText: 'Username',
               ),
             ),
 
@@ -63,13 +85,34 @@ class _LoginFormState extends State<LoginForm> {
 
             const SizedBox(height: 10),
 
+            DebounceField(
+              validator: (value) => Future.value(equals(value, widget.passwordController.text)),
+              debounceDelay: debounceDuration,
+              controller: widget.passwordConfirmController,
+              obscureText: true,
+              isEmptyMessage: "Please confirm your password.",
+              isInvalidMessage: "Passwords must be the same.",
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                isDense: true,
+                labelText: 'Confirm Password',
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  BlocProvider.of<UserBloc>(context).add(UserLogin(email: widget.emailController.text, password: widget.passwordController.text));
+                  BlocProvider.of<UserBloc>(context)
+                      .add(UserRegister(
+                      email: widget.emailController.text,
+                      password: widget.passwordController.text,
+                      name: widget.usernameController.text
+                  ));
                 }
               },
-              child: const Text("Log in"),
+              child: const Text("Register"),
             ),
 
           ],
@@ -77,5 +120,4 @@ class _LoginFormState extends State<LoginForm> {
       ),
     );
   }
-
 }

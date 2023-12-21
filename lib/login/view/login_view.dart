@@ -30,13 +30,11 @@ class LoginView extends StatelessWidget {
             case UserInProgress():
               return const LoadingPage();
             case _:
-              return const LoginForm();
+              return LoginForm();
           }
         },
       ),
     );
   }
-
-
 }
 
