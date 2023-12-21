@@ -6,6 +6,7 @@ export 'loading/loading.dart';
 export 'login/login.dart';
 export 'register/register.dart';
 export 'extensions/extensions.dart';
+export 'error/error.dart';
 
 /// A user id corresponding to a Firebase Authentication User UID.
 typedef UserId = String;
